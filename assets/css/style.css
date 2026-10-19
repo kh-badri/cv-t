@@ -137,7 +137,7 @@ section[id] {
 
 @page {
   size: A4 portrait !important;
-  margin: 18mm 10mm 10mm 10mm !important;
+  margin: 5mm 7mm 4mm 7mm !important;
 }
 
 @media print {
@@ -145,6 +145,9 @@ section[id] {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+    box-sizing: border-box !important;
+    -webkit-text-size-adjust: none !important;
+    text-size-adjust: none !important;
   }
 
   html, body {
@@ -152,14 +155,20 @@ section[id] {
     padding: 0 !important;
     background: #ffffff !important;
     color: #0f172a !important;
-    font-size: 9.5pt !important;
-    line-height: 1.35 !important;
+    font-size: 8.2pt !important;
+    line-height: 1.25 !important;
+    -webkit-text-size-adjust: none !important;
+    text-size-adjust: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
 
   /* Hide regular web elements on print */
   header,
   main,
   footer,
+  #authGate,
   #imageModal,
   #toast,
   .no-print {
@@ -170,11 +179,33 @@ section[id] {
   .print-sheet {
     display: block !important;
     width: 100% !important;
-    max-width: 192mm !important;
+    max-width: 190mm !important;
     margin: 0 auto !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Ensure multi-column grids do NOT wrap into single column on mobile */
+  .print-sheet .grid {
+    display: grid !important;
+  }
+
+  .print-sheet .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .print-sheet .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  /* Prevent page breaks inside cards */
+  .print-sheet > div,
+  .print-sheet div {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
 

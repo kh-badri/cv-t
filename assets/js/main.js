@@ -228,10 +228,38 @@ document.addEventListener('DOMContentLoaded', () => {
   printBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+
+      // Close mobile navigation drawer if open
+      const mobileNav = document.getElementById('mobileMenu');
+      if (mobileNav && !mobileNav.classList.contains('hidden')) {
+        mobileNav.classList.add('hidden');
+      }
+
       if (window.lucide) {
         window.lucide.createIcons();
       }
-      window.print();
+
+      // For mobile screens, temporarily adjust viewport meta to desktop resolution so mobile print engine does not inflate/zoom
+      const viewportMeta = document.querySelector('meta[name="viewport"]');
+      const originalViewport = viewportMeta ? viewportMeta.getAttribute('content') : null;
+
+      if (viewportMeta && window.innerWidth < 768) {
+        viewportMeta.setAttribute('content', 'width=1024');
+      }
+
+      const restoreViewport = () => {
+        if (viewportMeta && originalViewport) {
+          viewportMeta.setAttribute('content', originalViewport);
+        }
+        window.removeEventListener('afterprint', restoreViewport);
+      };
+
+      window.addEventListener('afterprint', restoreViewport);
+
+      setTimeout(() => {
+        window.print();
+        setTimeout(restoreViewport, 1200);
+      }, 80);
     });
   });
 
